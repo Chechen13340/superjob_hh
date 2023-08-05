@@ -19,32 +19,32 @@ class HeadHunterParser(HH_SJ_API):
     def get_data(self) -> dict:
         response = requests.get(self.url, headers=self.headers, params=self.params)
         data = response.json()
-        with open('../vacansy.csv', 'w', newline='', encoding='utf8') as file:
-            file.write(json.dumps(data['items'], indent=2, ensure_ascii=False))
         return data['items']
 
-    def display_information(self) -> list:
-        vacansy = []
+    def data_dict(self) -> dict:
+        vacancy = []
         for item in self.get_data():
-            vacancy_name = item['name']
-            vacancy_area = item['area']['name']
-            vacancy_employer = item['employer']['name']
-            vacancy_url = item['alternate_url']
-            vacancy_requirement = item['snippet']['requirement']
-            vacancy_responsibility = item['snippet']['responsibility']
+            user_data = dict()
+            user_data['job_title'] = item['name']
+            user_data['location'] = item['area']['name']
+            user_data['employer'] = item['employer']['name']
+            user_data['url'] = item['alternate_url']
+            user_data['requirement'] = item['snippet']['requirement']
+            user_data['responsibilities'] = item['snippet']['responsibility']
             if item.get('salary') is None:
-                vacansy_salary_from = 0
-                vacansy_salary_to = 0
-                vacansy_currency = 'Информация отсутсвует'
+                user_data['salary_min'] = 0
+                user_data['salary_max'] = 0
+                user_data['currency'] = 'Информация отсутсвует'
             else:
-                vacansy_salary_from = item['salary']['from']
-                vacansy_salary_to = item['salary']['to']
-                vacansy_currency = item['salary']['currency']
-            data_vacancy = (f"Должность: {vacancy_name}\nГород: {vacancy_area}\nРаботодатель: "
-                            f"{vacancy_employer}\nСайт вакансии: {vacancy_url}\nЗаработная плата от: "
-                            f"{vacansy_salary_from} до {vacansy_salary_to} {vacansy_currency}\nОписание вакансии: "
-                            f"{vacancy_requirement}\nОбязанности: {vacancy_responsibility}\n")
+                user_data['salary_min'] = item['salary']['from']
+                user_data['salary_max'] = item['salary']['to']
+                user_data['currency'] = item['salary']['currency']
 
-            vacansy.append(data_vacancy)
+            vacancy.append(user_data)
 
-        return vacansy
+        return vacancy
+
+    def save_json(self):
+        with open('../superjob_hh/vacancy.csv', 'w', newline='', encoding='utf8') as file:
+            new_file = file.write(json.dumps(self.data_dict(), indent=2, ensure_ascii=False))
+            return new_file
