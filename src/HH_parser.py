@@ -33,8 +33,8 @@ class HeadHunterParser(HH_SJ_API):
             vacancy_requirement = item['snippet']['requirement']
             vacancy_responsibility = item['snippet']['responsibility']
             if item.get('salary') is None:
-                vacansy_salary_from = 'Не указано'
-                vacansy_salary_to = 'Не указано'
+                vacansy_salary_from = 0
+                vacansy_salary_to = 0
                 vacansy_currency = 'Информация отсутсвует'
             else:
                 vacansy_salary_from = item['salary']['from']
