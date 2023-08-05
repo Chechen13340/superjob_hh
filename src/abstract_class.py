@@ -10,3 +10,7 @@ class HH_SJ_API(ABC):
     @abstractmethod
     def get_data(self) -> dict:
         pass
+
+    @abstractmethod
+    def save_json(self):
+        pass
