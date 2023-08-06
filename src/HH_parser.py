@@ -20,12 +20,7 @@ class HeadHunterParser(HH_SJ_API):
         data = response.json()
         return data['items']
 
-
-class JSONSaver(HeadHunterParser):
-    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
-        super().__init__(vacansy_name, region, page_number, count_per_page)
-
-    def data_dict(self) -> dict:
+    def add_vacancies_file(self):
         vacancy = []
         for item in self.get_data():
             self.user_data = dict()
@@ -48,9 +43,14 @@ class JSONSaver(HeadHunterParser):
 
         return vacancy
 
+
+class JSONSaver(HeadHunterParser):
+    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
+        super().__init__(vacansy_name, region, page_number, count_per_page)
+
     def save_json(self):
         with open('../superjob_hh/vacancy.csv', 'w', newline='', encoding='utf8') as file:
-            new_file = file.write(json.dumps(self.data_dict(), indent=2, ensure_ascii=False))
+            new_file = file.write(json.dumps(self.add_file(), indent=2, ensure_ascii=False))
             return new_file
 
 
@@ -72,33 +72,33 @@ class Vacancies:
             self.data = json.load(file)
 
     def display_information(self):
-            display_data = []
-            for item in self.data:
-                self.job_title = item['job_title']
-                self.location = item['location']
-                self.employer = item['employer']
-                self.url = item['url']
-                self.requirement = item['requirement']
-                self.responsibilities = item['responsibilities']
-                self.currency = item['currency']
-                if item['salary_max'] is None:
-                    self.salary_min = item['salary_min']
-                    self.salary_max = 'Не указано'
-                    self.salary_average = self.salary_min
-                elif item['salary_min'] is None:
-                    self.salary_max = item['salary_max']
-                    self.salary_min = 'Не указано'
-                    self.salary_average = self.salary_max
-                else:
-                    self.salary_max = item['salary_max']
-                    self.salary_min = item['salary_min']
-                    self.salary_average = (int(self.salary_max) + int(self.salary_min)) // 2
+        display_data = []
+        for item in self.data:
+            self.job_title = item['job_title']
+            self.location = item['location']
+            self.employer = item['employer']
+            self.url = item['url']
+            self.requirement = item['requirement']
+            self.responsibilities = item['responsibilities']
+            self.currency = item['currency']
+            if item['salary_max'] is None:
+                self.salary_min = item['salary_min']
+                self.salary_max = 'Не указано'
+                self.salary_average = self.salary_min
+            elif item['salary_min'] is None:
+                self.salary_max = item['salary_max']
+                self.salary_min = 'Не указано'
+                self.salary_average = self.salary_max
+            else:
+                self.salary_max = item['salary_max']
+                self.salary_min = item['salary_min']
+                self.salary_average = (int(self.salary_max) + int(self.salary_min)) // 2
 
-                user_information = (f"\nДолжность: {self.job_title}\nЛокация: {self.location}\nРаботадатель: "
-                                    f"{self.employer}\nСайт вакансии: {self.url}\nТребования: {self.requirement}\n"
-                                    f"Обязанности: {self.responsibilities}\nЗаработная плата от: {self.salary_min}\n"
-                                    f"Заработная плата до: {self.salary_max}\n"
-                                    f"Средняя заработная плата: {self.salary_average}\nВалюта: {self.currency}\n")
+            user_information = (f"\nДолжность: {self.job_title}\nЛокация: {self.location}\nРаботадатель: "
+                                f"{self.employer}\nСайт вакансии: {self.url}\nТребования: {self.requirement}\n"
+                                f"Обязанности: {self.responsibilities}\nЗаработная плата от: {self.salary_min}\n"
+                                f"Заработная плата до: {self.salary_max}\n"
+                                f"Средняя заработная плата: {self.salary_average}\nВалюта: {self.currency}\n")
 
-                display_data.append(user_information)
-            return display_data
+            display_data.append(user_information)
+        return display_data
