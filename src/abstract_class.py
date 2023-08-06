@@ -14,3 +14,7 @@ class HH_SJ_API(ABC):
     @abstractmethod
     def add_vacancies_file(self):
         pass
+
+    @abstractmethod
+    def get_information(self, information: str):
+        pass
