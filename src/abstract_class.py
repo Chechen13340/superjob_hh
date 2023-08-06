@@ -9,12 +9,24 @@ class HH_SJ_API(ABC):
 
     @abstractmethod
     def get_data(self) -> dict:
+        """
+        Абстрактный метод для получения данных
+        через API в виде словаря.
+        """
         pass
 
     @abstractmethod
     def add_vacancies_file(self):
+        """"
+        Метод для добавления информауии о вакансиях в список
+        словарей для последующей записи json файла.
+        """
         pass
 
     @abstractmethod
     def get_information(self, information: str):
+        """"
+        Метод для получения данных из файла по указанным критериям
+        и вывода данных в консоль для удобаства пользователя.
+        """
         pass
