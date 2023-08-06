@@ -12,5 +12,5 @@ class HH_SJ_API(ABC):
         pass
 
     @abstractmethod
-    def save_json(self):
+    def add_vacancies_file(self):
         pass
