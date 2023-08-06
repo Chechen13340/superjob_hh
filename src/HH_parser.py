@@ -50,7 +50,7 @@ class JSONSaver(HeadHunterParser):
 
     def save_json(self):
         with open('../superjob_hh/vacancy.csv', 'w', newline='', encoding='utf8') as file:
-            new_file = file.write(json.dumps(self.add_file(), indent=2, ensure_ascii=False))
+            new_file = file.write(json.dumps(self.add_vacancies_file(), indent=2, ensure_ascii=False))
             return new_file
 
 
