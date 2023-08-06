@@ -4,6 +4,7 @@ import requests
 
 from superjob_hh.settings import HH_API_URL, OPEARTION_PATH
 from superjob_hh.src.abstract_class import HH_SJ_API
+from superjob_hh.src.exchage_rate import get_currency_rate
 
 
 class HeadHunterParser(HH_SJ_API):
@@ -21,6 +22,10 @@ class HeadHunterParser(HH_SJ_API):
         return data['items']
 
     def add_vacancies_file(self):
+        """"
+        Метод для добавления информауии о вакансиях в список
+        словарей для последующей записи json файла.
+        """
         vacancy = []
         for item in self.get_data():
             self.user_data = dict()
@@ -33,15 +38,78 @@ class HeadHunterParser(HH_SJ_API):
             if item.get('salary') is None:
                 self.user_data['salary_min'] = 0
                 self.user_data['salary_max'] = 0
+                self.user_data['salary_average'] = (self.user_data['salary_min'] + self.user_data['salary_max']) / 2
                 self.user_data['currency'] = 'Информация отсутсвует'
+            elif item['salary']['from'] is None:
+                self.user_data['salary_min'] = 0
+                self.user_data['salary_max'] = item['salary']['to']
+                self.user_data['salary_average'] = self.user_data['salary_max']
+                self.user_data['currency'] = item['salary']['currency']
+            elif item['salary']['to'] is None:
+                self.user_data['salary_min'] = item['salary']['from']
+                self.user_data['salary_max'] = 0
+                self.user_data['salary_average'] = self.user_data['salary_min']
+                self.user_data['currency'] = item['salary']['currency']
             else:
                 self.user_data['salary_min'] = item['salary']['from']
                 self.user_data['salary_max'] = item['salary']['to']
+                self.user_data['salary_average'] = (int(self.user_data['salary_min']) + int(
+                    self.user_data['salary_max'])) / 2
                 self.user_data['currency'] = item['salary']['currency']
 
             vacancy.append(self.user_data)
 
         return vacancy
+
+    def get_information(self, user_request):
+        """"
+        Метод для получения данных из файла по указанным критериям
+        и вывода данных в консоль для удобаства пользователя.
+        """
+        sort_data = []
+        self.user_request = user_request
+        for num in self.add_vacancies_file():
+            if (self.user_request.lower() == 'job_title' or self.user_request.lower() == 'employer'
+                    or self.user_request.lower() == 'url'):
+                data = f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: {num['url']}\n"
+                sort_data.append(data)
+            elif self.user_request.lower() == 'location':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: "
+                        f"{num['url']}\nЛокация: {num['location']}\n")
+                sort_data.append(data)
+            elif self.user_request.lower() == 'requirement':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: "
+                        f"{num['url']}\nТребования: {num['requirement']}\n")
+                sort_data.append(data)
+            elif self.user_request.lower() == 'responsibilities':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: "
+                      f"{num['url']}\nОбязанности: {num['responsibilities']}\n")
+                sort_data.append(data)
+            elif self.user_request.lower() == 'salary_min':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: "
+                      f"{num['url']}\nЗаработная плата от: {num['salary_min']}\n")
+                sort_data.append(data)
+            elif self.user_request.lower() == 'salary_max':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: "
+                      f"{num['url']}\nЗаработная плата до: {num['salary_max']}\n")
+                sort_data.append(data)
+            elif self.user_request.lower() == 'salary_average':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: "
+                      f"{num['url']}\nСредняя заработная плата: {num['salary_average']}\n")
+                sort_data.append(data)
+            elif self.user_request.lower() == 'currency':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии:"
+                      f" {num['url']}\nВалюта: {num['currency']}\n")
+                sort_data.append(data)
+            elif self.user_request.lower() == 'all_data':
+                data = (f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: {num['url']}\n"
+                      f"Локация: {num['location']}\nТребования: {num['requirement']}\nОбязанности:"
+                      f" {num['responsibilities']}\nЗаработная плата от: {num['salary_min']}\n"
+                      f"Заработная плата до: {num['salary_max']}\nСредняя заработная плата: {num['salary_average']}\n"
+                      f"Валюта: {num['currency']}\n")
+                sort_data.append(data)
+
+        return sort_data
 
 
 class JSONSaver(HeadHunterParser):
@@ -49,56 +117,82 @@ class JSONSaver(HeadHunterParser):
         super().__init__(vacansy_name, region, page_number, count_per_page)
 
     def save_json(self):
+        """Метод для сохранения json файла."""
         with open('../superjob_hh/vacancy.csv', 'w', newline='', encoding='utf8') as file:
             new_file = file.write(json.dumps(self.add_vacancies_file(), indent=2, ensure_ascii=False))
             return new_file
 
+    #
+    def save_sort_txt(self):
+        data = self.get_information(self.user_request)
+        with open("sort_data.txt", "w") as file:
+            for d in data:
+                file.write(d.replace('[', '').replace(']', '')
+                       .replace("'", "|").replace(r"\n", ' ') + '\n')
 
-class Vacancies:
 
-    def __init__(self):
-        self.job_title = None
-        self.location = None
-        self.employer = None
-        self.url = None
-        self.requirement = None
-        self.responsibilities = None
-        self.currency = None
-        self.salary_max = None
-        self.salary_min = None
-        self.salary_average = None
 
-        with open(OPEARTION_PATH, 'r', encoding='utf8') as file:
-            self.data = json.load(file)
-
-    def display_information(self):
-        display_data = []
-        for item in self.data:
-            self.job_title = item['job_title']
-            self.location = item['location']
-            self.employer = item['employer']
-            self.url = item['url']
-            self.requirement = item['requirement']
-            self.responsibilities = item['responsibilities']
-            self.currency = item['currency']
-            if item['salary_max'] is None:
-                self.salary_min = item['salary_min']
-                self.salary_max = 'Не указано'
-                self.salary_average = self.salary_min
-            elif item['salary_min'] is None:
-                self.salary_max = item['salary_max']
-                self.salary_min = 'Не указано'
-                self.salary_average = self.salary_max
-            else:
-                self.salary_max = item['salary_max']
-                self.salary_min = item['salary_min']
-                self.salary_average = (int(self.salary_max) + int(self.salary_min)) // 2
-
-            user_information = (f"\nДолжность: {self.job_title}\nЛокация: {self.location}\nРаботадатель: "
-                                f"{self.employer}\nСайт вакансии: {self.url}\nТребования: {self.requirement}\n"
-                                f"Обязанности: {self.responsibilities}\nЗаработная плата от: {self.salary_min}\n"
-                                f"Заработная плата до: {self.salary_max}\n"
-                                f"Средняя заработная плата: {self.salary_average}\nВалюта: {self.currency}\n")
-
-            display_data.append(user_information)
-        return display_data
+# class Vacancies:
+#
+#     def __init__class(self):
+#         self.job_title = None
+#         self.location = None
+#         self.employer = None
+#         self.url = None
+#         self.requirement = None
+#         self.responsibilities = None
+#         self.currency = None
+#         self.salary_max = None
+#         self.salary_min = None
+#         self.salary_average = None
+#         self.rate = get_currency_rate()
+#         with open(OPEARTION_PATH, 'r', encoding='utf8') as file:
+#             self.data = json.load(file)
+#
+#     def display_information(self):
+#         display_data = []
+#         for item in self.data:
+#             self.job_title = item['job_title']
+#             self.location = item['location']
+#             self.employer = item['employer']
+#             self.url = item['url']
+#             self.requirement = item['requirement']
+#             self.responsibilities = item['responsibilities']
+#
+#             if item['salary_max'] is None and item['currency'] == 'RUR' or item['currency'] == 'Информация отсутсвует':
+#                 self.salary_min = item['salary_min']
+#                 self.salary_max = 'Не указано'
+#                 self.salary_average = self.salary_min
+#                 self.currency = item['currency']
+#             elif item['salary_max'] is None and item['currency'] == 'USD' or item[
+#                 'currency'] == 'Информация отсутсвует':
+#                 self.currency = 'RUR'
+#                 self.salary_max = 'Не указано'
+#                 self.salary_min = item['salary_min'] * self.rate
+#                 self.salary_average = self.salary_min
+#             elif item['salary_min'] is None and item['currency'] == 'RUR' or item[
+#                 'currency'] == 'Информация отсутсвует':
+#                 self.salary_max = item['salary_max']
+#                 self.salary_min = 'Не указано'
+#                 self.salary_average = self.salary_max
+#                 self.currency = item['currency']
+#             elif item['salary_min'] is None and item['currency'] == 'USD' or item[
+#                 'currency'] == 'Информация отсутсвует':
+#                 self.salary_max = item['salary_max'] * self.rate
+#                 self.salary_min = 'Не указано'
+#                 self.salary_average = self.salary_max
+#                 self.currency = 'RUR'
+#             else:
+#                 self.salary_max = item['salary_max']
+#                 self.salary_min = item['salary_min']
+#                 self.salary_average = (int(self.salary_max) + int(self.salary_min)) // 2
+#                 self.currency = item['currency']
+#
+#             user_information = (f"\nДолжность: {self.job_title}\nЛокация: {self.location}\nРаботадатель: "
+#                                 f"{self.employer}\nСайт вакансии: {self.url}\nТребования: {self.requirement}\n"
+#                                 f"Обязанности: {self.responsibilities}\nЗаработная плата от: {self.salary_min}\n"
+#                                 f"Заработная плата до: {self.salary_max}\n"
+#                                 f"Средняя заработная плата: {self.salary_average}\nВалюта: {self.currency}\n")
+#
+#             display_data.append(user_information)
+#         return display_data
