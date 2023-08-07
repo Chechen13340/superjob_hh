@@ -1,0 +1,62 @@
+[
+  {
+    "job_title": "Разработчик Python (junior)",
+    "location": "Москва",
+    "employer": "ANABAR",
+    "url": "https://hh.ru/vacancy/84630964",
+    "requirement": "Знание что такое swagger. Знание как управлять зависимостями в приложениях на <highlighttext>python</highlighttext> (pip/poetry/pipenv). Понимание про typehints/mypy. ",
+    "responsibilities": "Написание микросервисов для аналитических сервисов (формируют хитрый оптимизированный запрос в БД, обрабатывает на <highlighttext>python</highlighttext> и отдает в <highlighttext>python</highlighttext>). ",
+    "salary_min": 0,
+    "salary_max": 80000,
+    "salary_average": 80000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Начинающий программист (стажер) разработчик Python - парсинг сайтов",
+    "location": "Санкт-Петербург",
+    "employer": "Стоян Игнатий Вадимович",
+    "url": "https://hh.ru/vacancy/84519177",
+    "requirement": "Желательно знание основ парсинга сайтов и баз данных, <highlighttext>python</highlighttext>. Обязательно базовые знания ООП, SQL, CSS (понимание селекторов). Базовое понимание HTTP...",
+    "responsibilities": null,
+    "salary_min": 0,
+    "salary_max": 0,
+    "salary_average": 0,
+    "currency": "Информация отсутсвует"
+  },
+  {
+    "job_title": "Программист Python (Junior)",
+    "location": "Волгоград",
+    "employer": "Открытые Бизнес Технологии",
+    "url": "https://hh.ru/vacancy/84287412",
+    "requirement": "Знание <highlighttext>Python</highlighttext> (начальный уровень, готовность развиваться в рамках данного языка). Отличное владение ООП. Аккуратность в работе, стремление к высокому качеству...",
+    "responsibilities": "Работа с базами данных (SQL).",
+    "salary_min": 30000,
+    "salary_max": 0,
+    "salary_average": 30000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Junior Python-разработчик",
+    "location": "Москва",
+    "employer": "Blue underlined link",
+    "url": "https://hh.ru/vacancy/84558768",
+    "requirement": "Опыт работы с <highlighttext>Python</highlighttext> 3.x, асинхронностью и Docker-ом;+. Опыт работы с реляционными базами данных. Ответственность и умение...",
+    "responsibilities": "Разрабатывать backend микросервисных web-приложений. Много и усердно въезжать в происходящее:).",
+    "salary_min": 110000,
+    "salary_max": 140000,
+    "salary_average": 125000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Разработчик Python",
+    "location": "Санкт-Петербург",
+    "employer": "Это элементарно",
+    "url": "https://hh.ru/vacancy/84638082",
+    "requirement": "Опыт разработки на <highlighttext>Python</highlighttext> от 3 лет. Опыт работы с популярными фреймворками (Django, Flask, Sanic, FASTApi). Опыт ведения проектов по...",
+    "responsibilities": "Разработка новых и развитие имеющихся сервисов, написание unit-тестов. Освоение CI/CD процессов в компании и технологического стэка.",
+    "salary_min": 120000,
+    "salary_max": 0,
+    "salary_average": 120000,
+    "currency": "RUR"
+  }
+]
