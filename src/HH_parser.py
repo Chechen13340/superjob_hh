@@ -1,9 +1,8 @@
 import json
-import re
 
 import requests
 
-from superjob_hh.settings import HH_API_URL, OPEARTION_PATH
+from superjob_hh.settings import HH_API_URL
 from superjob_hh.src.abstract_class import HH_SJ_API
 from superjob_hh.src.exchage_rate import get_currency_rate
 
@@ -21,6 +20,23 @@ class HeadHunterParser(HH_SJ_API):
         response = requests.get(self.url, headers=self.headers, params=self.params)
         data = response.json()
         return data['items']
+
+    def del_data(self, key_word: str):
+        """"
+        Метод для удаления определенных данных
+        из файла .txt, которые не нужны пользователю.
+        """
+        self.key_word = key_word
+        with open("sort_data.txt") as file, open("del_data.txt", 'w') as new_file:
+            for line in file:
+                if key_word not in line:
+                    new_file.write(line)
+            return new_file
+
+
+class Vacancies(HeadHunterParser):
+    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
+        super().__init__(vacansy_name, region, page_number, count_per_page)
 
     def add_vacancies_file(self):
         """"
@@ -55,12 +71,39 @@ class HeadHunterParser(HH_SJ_API):
                 self.user_data['salary_min'] = item['salary']['from']
                 self.user_data['salary_max'] = item['salary']['to']
                 self.user_data['salary_average'] = (int(self.user_data['salary_min']) + int(
-                    self.user_data['salary_max'])) / 2
+                    self.user_data['salary_max'])) // 2
                 self.user_data['currency'] = item['salary']['currency']
 
             vacancy.append(self.user_data)
 
         return vacancy
+
+    # @staticmethod
+    def validation(self):
+        rate = get_currency_rate()
+        # rate = 10
+        data = self.add_vacancies_file()
+        validate_vacancy = []
+        for i in data:
+            self.dict_validate = dict()
+            self.dict_validate['job_title'] = i['job_title']
+            self.dict_validate['location'] = i['location']
+            self.dict_validate['employer'] = i['employer']
+            self.dict_validate['url'] = i['url']
+            self.dict_validate['requirement'] = i['requirement']
+            self.dict_validate['responsibilities'] = i['responsibilities']
+            if i['currency'] == 'USD':
+                self.dict_validate['salary_min'] = int(i['salary_min']) * rate
+                self.dict_validate['salary_max'] = int(i['salary_max']) * rate
+                self.dict_validate['salary_average'] = int(i['salary_average']) * rate
+                self.dict_validate['currency'] = 'RUR'
+            else:
+                self.dict_validate['salary_min'] = int(i['salary_min'])
+                self.dict_validate['salary_max'] = int(i['salary_max'])
+                self.dict_validate['salary_average'] = int(i['salary_average'])
+                self.dict_validate['currency'] = i['currency']
+            validate_vacancy.append(self.dict_validate)
+        return validate_vacancy
 
     def get_information(self, user_request):
         """"
@@ -69,7 +112,7 @@ class HeadHunterParser(HH_SJ_API):
         """
         sort_data = []
         self.user_request = user_request
-        for num in self.add_vacancies_file():
+        for num in self.validation():
             if (self.user_request.lower() == 'job_title' or self.user_request.lower() == 'employer'
                     or self.user_request.lower() == 'url'):
                 data = f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: {num['url']}\n"
@@ -113,23 +156,15 @@ class HeadHunterParser(HH_SJ_API):
 
         return sort_data
 
-    def del_data(self, key_word: str):
-        self.key_word = key_word
-        with open("sort_data.txt") as file, open("del_data.txt", 'w') as new_file:
-            for line in file:
-                if key_word not in line:
-                    new_file.write(line)
-            return new_file
 
-
-class JSONSaver(HeadHunterParser):
+class JSONSaver(Vacancies):
     def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
         super().__init__(vacansy_name, region, page_number, count_per_page)
 
     def save_json(self):
         """Метод для сохранения json файла."""
         with open('../superjob_hh/vacancy.csv', 'w', newline='', encoding='utf8') as file:
-            new_file = file.write(json.dumps(self.add_vacancies_file(), indent=2, ensure_ascii=False))
+            new_file = file.write(json.dumps(self.validation(), indent=2, ensure_ascii=False))
             return new_file
 
     #
@@ -139,4 +174,3 @@ class JSONSaver(HeadHunterParser):
             for d in data:
                 file.write(d.replace('[', '').replace(']', '')
                            .replace("'", "|").replace(r"\n", ' ') + '\n')
-
