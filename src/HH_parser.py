@@ -115,6 +115,15 @@ class Vacancies(HeadHunterParser):
             self.validate_vacancy.append(self.dict_validate)
         return self.validate_vacancy
 
+    def sort_data_of_salary(self, request_salary: str):
+        all_data = self.validation()
+        salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=True)
+        if request_salary.lower() == 'по убыванию':
+            return salary_sort
+        elif request_salary.lower() == 'по возрастанию':
+            salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=False)
+            return salary_sort
+
     def get_information(self, user_request):
         """"
         Метод для получения данных из файла по указанным критериям
@@ -166,24 +175,15 @@ class Vacancies(HeadHunterParser):
 
         return sort_data
 
-    def sort_data_of_salary(self, request_salary: str):
-        all_data = self.validation()
-        salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=True)
-        if request_salary.lower() == 'по убыванию':
-            return salary_sort
-        elif request_salary.lower() == 'по возрастанию':
-            salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=False)
-            return salary_sort
-
 
 class JSONSaver(Vacancies):
     def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
         super().__init__(vacansy_name, region, page_number, count_per_page)
 
-    def save_json(self):
+    def save_json(self, data):
         """Метод для сохранения json файла."""
         with open('../superjob_hh/vacancy.csv', 'w', newline='', encoding='utf8') as file:
-            new_file = file.write(json.dumps(self.validation(), indent=2, ensure_ascii=False))
+            new_file = file.write(json.dumps(data, indent=2, ensure_ascii=False))
             return new_file
 
     #
