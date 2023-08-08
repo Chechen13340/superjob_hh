@@ -1,4 +1,5 @@
 import json
+from operator import itemgetter
 
 import requests
 
@@ -80,10 +81,19 @@ class Vacancies(HeadHunterParser):
 
     # @staticmethod
     def validation(self):
-        rate = get_currency_rate()
-        # rate = 10
+
+        """
+        Метод для валидации данных полученных
+        из метода add_vacancies_file. Переводит
+        мнимальную, максимальную и среднню
+        заработную плату в рубли, если
+        изначальнные данные поступили в USD
+        """
+
+        # rate = get_currency_rate()
+        rate = 10
         data = self.add_vacancies_file()
-        validate_vacancy = []
+        self.validate_vacancy = []
         for i in data:
             self.dict_validate = dict()
             self.dict_validate['job_title'] = i['job_title']
@@ -102,8 +112,8 @@ class Vacancies(HeadHunterParser):
                 self.dict_validate['salary_max'] = int(i['salary_max'])
                 self.dict_validate['salary_average'] = int(i['salary_average'])
                 self.dict_validate['currency'] = i['currency']
-            validate_vacancy.append(self.dict_validate)
-        return validate_vacancy
+            self.validate_vacancy.append(self.dict_validate)
+        return self.validate_vacancy
 
     def get_information(self, user_request):
         """"
@@ -156,6 +166,15 @@ class Vacancies(HeadHunterParser):
 
         return sort_data
 
+    def sort_data_of_salary(self, request_salary: str):
+        all_data = self.validation()
+        salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=True)
+        if request_salary.lower() == 'по убыванию':
+            return salary_sort
+        elif request_salary.lower() == 'по возрастанию':
+            salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=False)
+            return salary_sort
+
 
 class JSONSaver(Vacancies):
     def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
@@ -169,6 +188,7 @@ class JSONSaver(Vacancies):
 
     #
     def save_sort_txt(self):
+        """Метод для сохранения отсортированных данных в .txt."""
         data = self.get_information(self.user_request)
         with open("sort_data.txt", "w") as file:
             for d in data:
