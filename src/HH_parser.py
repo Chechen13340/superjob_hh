@@ -9,13 +9,33 @@ from superjob_hh.src.exchage_rate import get_currency_rate
 
 
 class HeadHunterParser(HH_SJ_API):
-    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
+    def __init__(self, vacancy_name: str, region: int, page_number: int, count_per_page: int):
+        self.__vacancy_name = vacancy_name
+        self.__region = region
+        self.__page_number = page_number
+        self.__count_per_page = count_per_page
         super().__init__(url=HH_API_URL, headers={"User-Agent": "HH-User-Agent"}, params={
-            'text': vacansy_name,
+            'text': vacancy_name,
             'area': region,
             'page': page_number,
             'per_page': count_per_page
         })
+
+    @property
+    def vacancy_name(self):
+        return self.__vacancy_name
+
+    @property
+    def region(self):
+        return self.__region
+
+    @property
+    def page_number(self):
+        return self.__page_number
+
+    @property
+    def count_per_page(self):
+        return self.__count_per_page
 
     def get_data(self) -> dict:
         response = requests.get(self.url, headers=self.headers, params=self.params)
@@ -36,8 +56,9 @@ class HeadHunterParser(HH_SJ_API):
 
 
 class Vacancies(HeadHunterParser):
-    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
-        super().__init__(vacansy_name, region, page_number, count_per_page)
+    def __init__(self, vacancy_name: str, region: int, page_number: int, count_per_page: int, request_salary: str):
+        self.request_salary = request_salary
+        super().__init__(vacancy_name, region, page_number, count_per_page)
 
     def add_vacancies_file(self):
         """"
@@ -91,7 +112,7 @@ class Vacancies(HeadHunterParser):
         """
 
         # rate = get_currency_rate()
-        rate = 10
+        rate = 10.1231
         data = self.add_vacancies_file()
         self.validate_vacancy = []
         for i in data:
@@ -115,14 +136,17 @@ class Vacancies(HeadHunterParser):
             self.validate_vacancy.append(self.dict_validate)
         return self.validate_vacancy
 
-    def sort_data_of_salary(self, request_salary: str):
+    def sort_data_of_salary(self):
+
         all_data = self.validation()
         salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=True)
-        if request_salary.lower() == 'по убыванию':
+        if self.request_salary.lower() == 'по убыванию':
             return salary_sort
-        elif request_salary.lower() == 'по возрастанию':
+        elif self.request_salary.lower() == 'по возрастанию':
             salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=False)
             return salary_sort
+        else:
+            return all_data
 
     def get_information(self, user_request):
         """"
@@ -131,7 +155,7 @@ class Vacancies(HeadHunterParser):
         """
         sort_data = []
         self.user_request = user_request
-        for num in self.validation():
+        for num in self.sort_data_of_salary():
             if (self.user_request.lower() == 'job_title' or self.user_request.lower() == 'employer'
                     or self.user_request.lower() == 'url'):
                 data = f"\nДолжность: {num['job_title']}\nРаботадатель: {num['employer']}\nСайт вакансии: {num['url']}\n"
@@ -177,8 +201,8 @@ class Vacancies(HeadHunterParser):
 
 
 class JSONSaver(Vacancies):
-    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int):
-        super().__init__(vacansy_name, region, page_number, count_per_page)
+    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int, request_salary: str):
+        super().__init__(vacansy_name, region, page_number, count_per_page, request_salary)
 
     def save_json(self, data):
         """Метод для сохранения json файла."""
