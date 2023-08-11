@@ -1,11 +1,9 @@
 import json
-from operator import itemgetter
 
 import requests
 
 from superjob_hh.settings import HH_API_URL
 from superjob_hh.src.abstract_class import HH_SJ_API
-from superjob_hh.src.exchage_rate import get_currency_rate
 
 
 class HeadHunterParser(HH_SJ_API):
@@ -112,7 +110,7 @@ class Vacancies(HeadHunterParser):
         """
 
         # rate = get_currency_rate()
-        rate = 10.1231
+        rate = 99.04
         data = self.add_vacancies_file()
         self.validate_vacancy = []
         for i in data:
