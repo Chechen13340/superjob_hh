@@ -1,3 +1,6 @@
+import json
+
+from superjob_hh.settings import OPEARTION_PATH
 from superjob_hh.src.HH_parser import Vacancies, JSONSaver
 
 
@@ -45,8 +48,8 @@ def user_sort():
 def del_info():
     """
     Функция для удаления информации по ключу
-     из словаря. Возвращает отсортированные,
-     в том числе после удаления, данные в txt файл.
+    из словаря. Возвращает отсортированные
+    данные в txt файл.
     """
     json_saver = user_sort()
     user_key = input('Введите ключевое слово чтобы удалить ненужные данные (для завершения введите "Выход" ): ')
@@ -55,3 +58,30 @@ def del_info():
         json_saver.del_data(user_key)
         user_key = input('Введите ключевое слово чтобы удалить ненужные данные (для завершения введите "Выход"): ')
     return json_saver.save_sort_txt()
+
+
+def display_top_vacncies():
+    """
+    Функция для вывода первых N вакансий из
+    сформированного json файла после сортировки
+    по заработной плате. Ничего не возвращает.
+    """
+    with open(OPEARTION_PATH, 'r') as file:
+        data = json.loads(file.read())
+        list_data = []
+        for i in data:
+            dict_print = dict()
+            dict_print['Должность'] = i['job_title']
+            dict_print['Работодатель'] = i['employer']
+            dict_print['Требования'] = i['requirement']
+            dict_print['Обязанности'] = i['responsibilities']
+            dict_print['Заработная плата от'] = i['salary_min']
+            dict_print['Заработная плата до'] = i['salary_max']
+            dict_print['Средняя заработная плата'] = i['salary_average']
+            dict_print['Валюта'] = i['currency']
+            list_data.append(dict_print)
+
+        number_vacancies = int(input('Введите количество вакансий, которые Вы хотели бы вывести: '))
+        for N in range(number_vacancies):
+            result = '\n'.join([f'{key}: {value}' for key, value in list_data[N].items()])
+            print(f'\n{result}\n')
