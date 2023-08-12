@@ -32,7 +32,6 @@ class SJparser(HH_SJ_API):
             self.user_data = dict()
             self.user_data['job_title'] = item['profession']
             self.user_data['location'] = item['address']
-            # self.user_data['employer'] = item['client']
             if item['client'].get('title') is None:
                 self.user_data['employer'] = "Информация отсутствует"
                 self.user_data['url'] = item['link']
@@ -203,16 +202,3 @@ class JSONSaverSJ(VacanciesSJ):
             for d in data:
                 file.write(d.replace('[', '').replace(']', '')
                            .replace("'", "|").replace(r"\n", ' ') + '\n')
-
-
-# x = VacanciesSJ('фрезеровщик', 4, 4, 'по убыванию')
-# y = JSONSaverSJ('фрезеровщик', 4, 3, 'по убыванию')
-# print(x)
-# print(x.get_data())
-# print(x.add_vacancies_file())
-# # key_word = input()
-# # x.del_data(key_word)
-# # user_request = input()
-# # for i in x.get_information(user_request):
-# #     print(i)
-# # y.save_sort_txt()
