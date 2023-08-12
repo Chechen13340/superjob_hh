@@ -36,27 +36,13 @@ class HeadHunterParser(HH_SJ_API):
         return self.__count_per_page
 
     def get_data(self) -> dict:
+        """
+        Функция для получения данных
+        по API. Возвращает список словарей.
+        """
         response = requests.get(self.url, headers=self.headers, params=self.params)
         data = response.json()
         return data['items']
-
-    def del_data(self, key_word: str):
-        """"
-        Метод для удаления определенных данных
-        из файла .txt, которые не нужны пользователю.
-        """
-        self.key_word = key_word
-        with open("sort_data.txt") as file, open("del_data.txt", 'w') as new_file:
-            for line in file:
-                if key_word not in line:
-                    new_file.write(line)
-            return new_file
-
-
-class Vacancies(HeadHunterParser):
-    def __init__(self, vacancy_name: str, region: int, page_number: int, count_per_page: int, request_salary: str):
-        self.request_salary = request_salary
-        super().__init__(vacancy_name, region, page_number, count_per_page)
 
     def add_vacancies_file(self):
         """"
@@ -98,53 +84,17 @@ class Vacancies(HeadHunterParser):
 
         return vacancy
 
-    # @staticmethod
-    def validation(self):
-
+    def del_data(self, key_word: str):
+        """"
+        Метод для удаления определенных данных
+        из файла .txt, которые не нужны пользователю.
         """
-        Метод для валидации данных полученных
-        из метода add_vacancies_file. Переводит
-        мнимальную, максимальную и среднню
-        заработную плату в рубли, если
-        изначальнные данные поступили в USD
-        """
-
-        # rate = get_currency_rate()
-        rate = 99.04
-        data = self.add_vacancies_file()
-        self.validate_vacancy = []
-        for i in data:
-            self.dict_validate = dict()
-            self.dict_validate['job_title'] = i['job_title']
-            self.dict_validate['location'] = i['location']
-            self.dict_validate['employer'] = i['employer']
-            self.dict_validate['url'] = i['url']
-            self.dict_validate['requirement'] = i['requirement']
-            self.dict_validate['responsibilities'] = i['responsibilities']
-            if i['currency'] == 'USD':
-                self.dict_validate['salary_min'] = int(i['salary_min']) * rate
-                self.dict_validate['salary_max'] = int(i['salary_max']) * rate
-                self.dict_validate['salary_average'] = int(i['salary_average']) * rate
-                self.dict_validate['currency'] = 'RUR'
-            else:
-                self.dict_validate['salary_min'] = int(i['salary_min'])
-                self.dict_validate['salary_max'] = int(i['salary_max'])
-                self.dict_validate['salary_average'] = int(i['salary_average'])
-                self.dict_validate['currency'] = i['currency']
-            self.validate_vacancy.append(self.dict_validate)
-        return self.validate_vacancy
-
-    def sort_data_of_salary(self):
-
-        all_data = self.validation()
-        salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=True)
-        if self.request_salary.lower() == 'по убыванию':
-            return salary_sort
-        elif self.request_salary.lower() == 'по возрастанию':
-            salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=False)
-            return salary_sort
-        else:
-            return all_data
+        self.key_word = key_word
+        with open("sort_data.txt") as file, open("del_data.txt", 'w') as new_file:
+            for line in file:
+                if key_word not in line:
+                    new_file.write(line)
+            return new_file
 
     def get_information(self, user_request):
         """"
@@ -198,9 +148,66 @@ class Vacancies(HeadHunterParser):
         return sort_data
 
 
-class JSONSaver(Vacancies):
-    def __init__(self, vacansy_name: str, region: int, page_number: int, count_per_page: int, request_salary: str):
-        super().__init__(vacansy_name, region, page_number, count_per_page, request_salary)
+class VacanciesHH(HeadHunterParser):
+    def __init__(self, vacancy_name: str, region: int, page_number: int, count_per_page: int, request_salary: str):
+        self.request_salary = request_salary
+        super().__init__(vacancy_name, region, page_number, count_per_page)
+
+    def validation(self):
+
+        """
+        Метод для валидации данных полученных
+        из метода add_vacancies_file. Переводит
+        мнимальную, максимальную и среднню
+        заработную плату в рубли, если
+        изначальнные данные поступили в USD
+        """
+
+        # rate = get_currency_rate()
+        rate = 99.04
+        data = self.add_vacancies_file()
+        self.validate_vacancy = []
+        for i in data:
+            self.dict_validate = dict()
+            self.dict_validate['job_title'] = i['job_title']
+            self.dict_validate['location'] = i['location']
+            self.dict_validate['employer'] = i['employer']
+            self.dict_validate['url'] = i['url']
+            self.dict_validate['requirement'] = i['requirement']
+            self.dict_validate['responsibilities'] = i['responsibilities']
+            if i['currency'] == 'USD':
+                self.dict_validate['salary_min'] = int(i['salary_min']) * rate
+                self.dict_validate['salary_max'] = int(i['salary_max']) * rate
+                self.dict_validate['salary_average'] = int(i['salary_average']) * rate
+                self.dict_validate['currency'] = 'RUR'
+            else:
+                self.dict_validate['salary_min'] = int(i['salary_min'])
+                self.dict_validate['salary_max'] = int(i['salary_max'])
+                self.dict_validate['salary_average'] = int(i['salary_average'])
+                self.dict_validate['currency'] = i['currency']
+            self.validate_vacancy.append(self.dict_validate)
+        return self.validate_vacancy
+
+    def sort_data_of_salary(self):
+        """
+        Метод для сортировки данных
+        по заработной плате. По убыванию/возрастанию.
+        Возвращает отсортированные данные.
+        """
+        all_data = self.validation()
+        salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=True)
+        if self.request_salary.lower() == 'по убыванию':
+            return salary_sort
+        elif self.request_salary.lower() == 'по возрастанию':
+            salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=False)
+            return salary_sort
+        else:
+            return all_data
+
+
+class JSONSaver(VacanciesHH):
+    def __init__(self, vacancy_name: str, region: int, page_number: int, count_per_page: int, request_salary: str):
+        super().__init__(vacancy_name, region, page_number, count_per_page, request_salary)
 
     def save_json(self, data):
         """Метод для сохранения json файла."""
