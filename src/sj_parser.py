@@ -196,6 +196,14 @@ class VacanciesSJ(SJparser):
         else:
             return all_data
 
+    def __lt__(self, other) -> bool:
+        """
+        Метод для сравнения объектов по зарплате.
+        """
+        compared_data = self.sort_data_of_salary()
+        if isinstance(other, VacanciesSJ):
+            return (int(compared_data['salary_average']) < int(other.compared_data['salary_average']))
+
 
 class JSONSaverSJ(VacanciesSJ):
     def __init__(self, vacancy_name: str, page_number: int, count_per_page: int, request_salary: str):
