@@ -22,11 +22,19 @@ class SJparser(HH_SJ_API):
         })
 
     def get_data(self) -> dict:
+        """
+        Функция для получения данных
+        по API. Возвращает список словарей.
+        """
         response = requests.get(self.url, headers=self.headers, params=self.params)
         data = response.json()
         return data['objects']
 
     def add_vacancies_file(self):
+        """"
+        Метод для добавления информауии о вакансиях в список
+        словарей для последующей записи json файла.
+        """
         vacancy = []
         for item in self.get_data():
             self.user_data = dict()
@@ -173,7 +181,11 @@ class VacanciesSJ(SJparser):
         return self.validate_vacancy
 
     def sort_data_of_salary(self):
-
+        """
+        Метод для сортировки данных
+        по заработной плате. По убыванию/возрастанию.
+        Возвращает отсортированные данные.
+        """
         all_data = self.validation()
         salary_sort = sorted(all_data, key=lambda data: data['salary_average'], reverse=True)
         if self.request_salary.lower() == 'по убыванию':
