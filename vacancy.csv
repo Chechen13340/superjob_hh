@@ -1,53 +1,5 @@
 [
   {
-    "job_title": "Исследователь данных, удаленно",
-    "location": "Москва",
-    "employer": "ВкусВилл",
-    "url": "https://hh.ru/vacancy/84841138",
-    "requirement": "Понимание бизнес-метрик и навыки презентации результата. — Уверенные знание SQL и <highlighttext>Python</highlighttext>. — Знание математической статистики и умение адаптировать методы машинного...",
-    "responsibilities": "Выявлять скрытые тенденции и закономерности, описывать их в том числе в виде аналитических материалов. — Проведение ad-hoc исследований. — ",
-    "salary_min": 190000,
-    "salary_max": 0,
-    "salary_average": 190000,
-    "currency": "RUR"
-  },
-  {
-    "job_title": "Тестировщик/Manual QA инженер",
-    "location": "Москва",
-    "employer": "Ит-Финанс",
-    "url": "https://hh.ru/vacancy/84494321",
-    "requirement": "Опыт работы с bugtracking-системами. Опыт работы с Postman PostgreSQL. Базовые знание <highlighttext>Python</highlighttext>. Selenium/Playwright или другой инструмент для автоматизации...",
-    "responsibilities": "Проводить ручное тестирование нового функционала внутренней системы, выполнять регрессионное тестирование, usability. Активное участие в проработке требований как для уже существующих...",
-    "salary_min": 0,
-    "salary_max": 100000,
-    "salary_average": 100000,
-    "currency": "RUR"
-  },
-  {
-    "job_title": "Программист-стажер",
-    "location": "Санкт-Петербург",
-    "employer": "ГК VOLOPAS",
-    "url": "https://hh.ru/vacancy/84963203",
-    "requirement": "наличие примеров выполненных проектов (демо, тестовые, опен-сорс). - желание обучаться и продвигаться. - знание основ программирования.",
-    "responsibilities": null,
-    "salary_min": 15000,
-    "salary_max": 150000,
-    "salary_average": 82500,
-    "currency": "RUR"
-  },
-  {
-    "job_title": "Разработчик Python (junior)",
-    "location": "Москва",
-    "employer": "ANABAR",
-    "url": "https://hh.ru/vacancy/84630964",
-    "requirement": "Знание что такое swagger. Знание как управлять зависимостями в приложениях на <highlighttext>python</highlighttext> (pip/poetry/pipenv). Понимание про typehints/mypy. ",
-    "responsibilities": "Написание микросервисов для аналитических сервисов (формируют хитрый оптимизированный запрос в БД, обрабатывает на <highlighttext>python</highlighttext> и отдает в <highlighttext>python</highlighttext>). ",
-    "salary_min": 0,
-    "salary_max": 80000,
-    "salary_average": 80000,
-    "currency": "RUR"
-  },
-  {
     "job_title": "Стажер-разработчик Python",
     "location": "Москва",
     "employer": "TerraLink",
@@ -118,5 +70,113 @@
     "salary_max": 0,
     "salary_average": 0,
     "currency": "Информация отсутсвует"
+  },
+  {
+    "job_title": "Junior Python developer",
+    "location": "Москва",
+    "employer": "ОКБ",
+    "url": "https://hh.ru/vacancy/84939159",
+    "requirement": "Знание <highlighttext>Python</highlighttext>, PowerShell, Java, VBS, bash. Знакомство с Postgresql, MSSQL, Oracle. Опыт работы на ОС Linux, Windows. Коммерческий опыт разработки...",
+    "responsibilities": "Добавление сертификатов пользователя на IIS сервер (без его перезагрузки, с написанием GUI). Мониторинг логов. Развертывание виртуальных машин с помощью скриптов. ",
+    "salary_min": 0,
+    "salary_max": 0,
+    "salary_average": 0,
+    "currency": "Информация отсутсвует"
+  },
+  {
+    "job_title": "Junior Backend-разработчик",
+    "location": "Екатеринбург",
+    "employer": "Rideró",
+    "url": "https://hh.ru/vacancy/84952414",
+    "requirement": "JavaScript. React для web. Внезапно RUST. CI / Feature Flags. Что ждём от тебя? Умение программировать на JavaScript. Слышал слово NodeJS. ",
+    "responsibilities": "Работа в команде разработки сервиса автоматизации подготовки книг. В составе команды предстоит решать продуктовые задачи. У нас нет вёрстки однотипных...",
+    "salary_min": 40000,
+    "salary_max": 0,
+    "salary_average": 40000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Backend-разработчик (Python)",
+    "location": "Санкт-Петербург",
+    "employer": "ПИКАССО",
+    "url": "https://hh.ru/vacancy/84190497",
+    "requirement": "Знание Django и умение применять базовые алгоритмы. Опыт работы с базами данных (MySQL, PostgreSQL). Будет хорошо, если вы использовали NoSQL. ",
+    "responsibilities": "Участие в выполнении проектов по созданию цифровой инфраструктуры для партнёров компании. Поддержка и развитие функционала сайта.",
+    "salary_min": 70000,
+    "salary_max": 0,
+    "salary_average": 70000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Разработчик Python (junior)",
+    "location": "Москва",
+    "employer": "ANABAR",
+    "url": "https://hh.ru/vacancy/84630964",
+    "requirement": "Знание что такое swagger. Знание как управлять зависимостями в приложениях на <highlighttext>python</highlighttext> (pip/poetry/pipenv). Понимание про typehints/mypy. ",
+    "responsibilities": "Написание микросервисов для аналитических сервисов (формируют хитрый оптимизированный запрос в БД, обрабатывает на <highlighttext>python</highlighttext> и отдает в <highlighttext>python</highlighttext>). ",
+    "salary_min": 0,
+    "salary_max": 80000,
+    "salary_average": 80000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Программист-стажер",
+    "location": "Санкт-Петербург",
+    "employer": "ГК VOLOPAS",
+    "url": "https://hh.ru/vacancy/84963203",
+    "requirement": "наличие примеров выполненных проектов (демо, тестовые, опен-сорс). - желание обучаться и продвигаться. - знание основ программирования.",
+    "responsibilities": null,
+    "salary_min": 15000,
+    "salary_max": 150000,
+    "salary_average": 82500,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Тестировщик/Manual QA инженер",
+    "location": "Москва",
+    "employer": "Ит-Финанс",
+    "url": "https://hh.ru/vacancy/84494321",
+    "requirement": "Опыт работы с bugtracking-системами. Опыт работы с Postman PostgreSQL. Базовые знание <highlighttext>Python</highlighttext>. Selenium/Playwright или другой инструмент для автоматизации...",
+    "responsibilities": "Проводить ручное тестирование нового функционала внутренней системы, выполнять регрессионное тестирование, usability. Активное участие в проработке требований как для уже существующих...",
+    "salary_min": 0,
+    "salary_max": 100000,
+    "salary_average": 100000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Junior Python-разработчик",
+    "location": "Москва",
+    "employer": "Blue underlined link",
+    "url": "https://hh.ru/vacancy/84558768",
+    "requirement": "Опыт работы с <highlighttext>Python</highlighttext> 3.x, асинхронностью и Docker-ом;+. Опыт работы с реляционными базами данных. Ответственность и умение...",
+    "responsibilities": "Разрабатывать backend микросервисных web-приложений. Много и усердно въезжать в происходящее:).",
+    "salary_min": 110000,
+    "salary_max": 140000,
+    "salary_average": 125000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Исследователь данных, удаленно",
+    "location": "Москва",
+    "employer": "ВкусВилл",
+    "url": "https://hh.ru/vacancy/84841138",
+    "requirement": "Понимание бизнес-метрик и навыки презентации результата. — Уверенные знание SQL и <highlighttext>Python</highlighttext>. — Знание математической статистики и умение адаптировать методы машинного...",
+    "responsibilities": "Выявлять скрытые тенденции и закономерности, описывать их в том числе в виде аналитических материалов. — Проведение ad-hoc исследований. — ",
+    "salary_min": 190000,
+    "salary_max": 0,
+    "salary_average": 190000,
+    "currency": "RUR"
+  },
+  {
+    "job_title": "Программист-разработчик",
+    "location": "Москва",
+    "employer": "Яркие Технологии",
+    "url": "https://hh.ru/vacancy/84907786",
+    "requirement": "Статический анализ кода. Знание и владение средствами проведения обратного проектирования. Знание Android. И все мэтчи по ключевым навыкам. Знание <highlighttext>Python</highlighttext>.",
+    "responsibilities": "Реверс-инжиниринг приложений компании (desktop/mobile). Участие в разработке новых продуктов. Работа с БД (sql/nosql). Доработка модулей для приложений...",
+    "salary_min": 140000,
+    "salary_max": 350000,
+    "salary_average": 245000,
+    "currency": "RUR"
   }
 ]
